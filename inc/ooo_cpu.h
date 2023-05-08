@@ -26,6 +26,8 @@
 #include <queue>
 #include <vector>
 
+#include <fstream>
+
 #include "champsim.h"
 #include "champsim_constants.h"
 #include "channel.h"
@@ -103,6 +105,8 @@ public:
   uint64_t num_retired = 0;
 
   bool show_heartbeat = true;
+  std::ofstream log_file{};
+  // std::ifstream log_file{};
 
   using stats_type = cpu_stats;
 

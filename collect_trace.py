@@ -17,22 +17,17 @@ for root, dir, files in os.walk(benchs_path):
 # print(groups)
 
 def execute_bench(group, counter):
-    results = open("/home/trigger/ChampSim/result_hp_" + str(counter) + ".txt", "w")
-    results.write("name IPC MPKI\n")
     progress_counter = 0
     for test in group:
+        results = open("/home/trigger/ChampSim/log_mru_new/log_" + test + ".txt", "w")
         print(progress_counter)
         progress_counter += 1
-        result = subprocess.check_output([exec_file, "--warmup_instructions", "50000000",
-                                          "--simulation_instructions" , "200000000", 
-                                          "--log_file", "/home/trigger/ChampSim/log_hp/log_" + test + ".txt",
-                                          root + "/" + test])
-        splitted = result.split()
-        results.write(test + " " + str(float(splitted[len(splitted) - 1 - splitted[::-1].index(b'IPC:') + 1])) + " " +
-                      str(float(splitted[splitted.index(b'MPKI:') + 1])) + "\n")
-        results.flush()
+        result = subprocess.run([exec_file, "--warmup_instructions", "10000000",
+                                          "--simulation_instructions" , "50000000",
+                                          root + "/" + test], stdout=subprocess.PIPE)
+        results.write(str(result.stdout.decode('utf-8')))
+        results.close()
     print("finished")
-    results.close()
 
 pool = multiprocessing.Pool()
 for i in range(4):
